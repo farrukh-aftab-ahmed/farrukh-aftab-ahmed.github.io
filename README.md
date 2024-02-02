@@ -1,2 +1,2 @@
-# farrukh-aftab-ahmed.github.io
+# farrukh.github.io
 My Portfolio
