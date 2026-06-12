@@ -1,254 +1,851 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farrukh Aftab Ahmed — AI Systems Architect</title>
-    <meta name="description" content="AI Systems Architect & Technical Lead. 8+ years building mission-critical AI systems, city-scale surveillance platforms, and enterprise backends.">
-    <meta name="theme-color" content="#050508">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Farrukh Aftab Ahmed — AI Systems Architect & Technical Lead. 8+ years building mission-critical AI systems, city-scale surveillance platforms, and enterprise backends.">
+<meta name="theme-color" content="#050508">
+<title>Farrukh Aftab Ahmed — AI Systems Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050508;
+  --bg2:#0a0a12;
+  --surface:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.08);
+  --cyan:#00f0ff;
+  --violet:#8b5cf6;
+  --magenta:#ff2d92;
+  --text:#e8e8f0;
+  --muted:#9a9ab0;
+  --grad:linear-gradient(135deg,#00f0ff 0%,#8b5cf6 50%,#ff2d92 100%);
+  --font:'Space Grotesk',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--font);
+  overflow-x:hidden;line-height:1.6;
+}
+::selection{background:var(--cyan);color:#000}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--cyan),var(--violet));border-radius:5px}
+
+/* ---------- Loader ---------- */
+#loader{
+  position:fixed;inset:0;background:var(--bg);z-index:10000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+  transition:opacity .6s ease,visibility .6s;
+}
+#loader.done{opacity:0;visibility:hidden}
+.loader-logo{
+  font-family:var(--mono);font-size:2.4rem;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.96)}}
+.loader-bar{width:220px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.loader-bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .25s}
+.loader-pct{font-family:var(--mono);font-size:.8rem;color:var(--muted);letter-spacing:.2em}
+
+/* ---------- Canvas & cursor ---------- */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.cursor-dot{width:6px;height:6px;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.cursor-ring{
+  width:36px;height:36px;border:1px solid rgba(0,240,255,.5);
+  transition:width .25s,height .25s,border-color .25s,background .25s;
+}
+.cursor-ring.hovering{width:60px;height:60px;border-color:var(--magenta);background:rgba(255,45,146,.08)}
+@media (hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- Aurora blobs ---------- */
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;filter:blur(110px);opacity:.35}
+.aurora span{position:absolute;border-radius:50%}
+.aurora span:nth-child(1){width:48vw;height:48vw;background:#0e4d5c;top:-15%;left:-12%;animation:drift1 24s ease-in-out infinite alternate}
+.aurora span:nth-child(2){width:40vw;height:40vw;background:#2b1a5e;bottom:-18%;right:-10%;animation:drift2 30s ease-in-out infinite alternate}
+.aurora span:nth-child(3){width:30vw;height:30vw;background:#4d1038;top:45%;left:55%;animation:drift3 26s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(14vw,10vh) scale(1.18)}}
+@keyframes drift2{to{transform:translate(-12vw,-12vh) scale(1.1)}}
+@keyframes drift3{to{transform:translate(-16vw,8vh) scale(.85)}}
+
+/* ---------- Scroll progress ---------- */
+#scrollbar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--grad);z-index:1001;box-shadow:0 0 10px var(--cyan)}
+
+/* ---------- Nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 6vw;transition:all .4s;
+}
+nav.scrolled{
+  padding:12px 6vw;background:rgba(5,5,8,.72);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:var(--mono);font-weight:700;font-size:1.3rem;text-decoration:none;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  position:relative;
+}
+.nav-links{display:flex;gap:34px;list-style:none}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:500;
+  letter-spacing:.04em;position:relative;transition:color .3s;
+}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;
+  background:var(--grad);transition:width .3s;border-radius:2px;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-cta{
+  font-family:var(--mono);font-size:.8rem;padding:10px 22px;border-radius:99px;
+  color:var(--cyan);border:1px solid rgba(0,240,255,.4);text-decoration:none;
+  transition:all .3s;background:rgba(0,240,255,.05);
+}
+.nav-cta:hover{background:var(--cyan);color:#000;box-shadow:0 0 28px rgba(0,240,255,.5)}
+#hamburger{display:none;background:none;border:none;cursor:pointer;z-index:1002;flex-direction:column;gap:5px}
+#hamburger span{width:26px;height:2px;background:var(--text);transition:all .3s;border-radius:2px}
+#hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#hamburger.open span:nth-child(2){opacity:0}
+#hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ---------- Layout helpers ---------- */
+main{position:relative;z-index:1}
+section{padding:110px 6vw;max-width:1280px;margin:0 auto}
+.sec-tag{
+  font-family:var(--mono);font-size:.8rem;color:var(--cyan);letter-spacing:.3em;
+  text-transform:uppercase;display:flex;align-items:center;gap:14px;margin-bottom:18px;
+}
+.sec-tag::after{content:'';height:1px;width:70px;background:linear-gradient(90deg,var(--cyan),transparent)}
+h2.sec-title{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;margin-bottom:48px;line-height:1.15}
+h2.sec-title em{
+  font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(46px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-56px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal-right{opacity:0;transform:translateX(56px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal-left.visible,.reveal-right.visible{opacity:1;transform:none}
+
+/* ---------- Hero ---------- */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:1280px;position:relative;padding-top:120px;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:10px;width:fit-content;
+  font-family:var(--mono);font-size:.78rem;color:#7CFC9B;letter-spacing:.12em;
+  border:1px solid rgba(124,252,155,.3);border-radius:99px;padding:8px 18px;
+  background:rgba(124,252,155,.05);margin-bottom:30px;
+}
+.badge i{width:8px;height:8px;border-radius:50%;background:#7CFC9B;box-shadow:0 0 10px #7CFC9B;animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.glitch-wrap{position:relative;width:fit-content}
+h1.hero-name{
+  font-size:clamp(2.6rem,7.5vw,6rem);font-weight:700;line-height:1.04;
+  letter-spacing:-.02em;
+}
+h1 .grad{
+  background:linear-gradient(135deg,#00f0ff,#8b5cf6,#ff2d92,#00f0ff);
+  background-size:300% 300%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:gradshift 7s ease infinite;
+}
+@keyframes gradshift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.typed-line{
+  font-family:var(--mono);font-size:clamp(1rem,2.2vw,1.5rem);color:var(--cyan);
+  margin:26px 0 22px;min-height:1.7em;display:flex;align-items:center;gap:4px;
+}
+.typed-line .prompt{color:var(--magenta)}
+.caret{display:inline-block;width:11px;height:1.25em;background:var(--cyan);animation:blink 1s infinite;vertical-align:text-bottom}
+.hero-sub{max-width:620px;color:var(--muted);font-size:1.06rem;margin-bottom:42px}
+.hero-cta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:70px}
+.btn{
+  position:relative;display:inline-flex;align-items:center;gap:10px;
+  padding:15px 34px;border-radius:14px;font-weight:600;font-size:.95rem;
+  text-decoration:none;transition:all .35s;overflow:hidden;
+}
+.btn-primary{background:var(--grad);color:#000}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;background:linear-gradient(135deg,#fff3,transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(139,92,246,.45)}
+.btn-primary:hover::before{opacity:1}
+.btn-ghost{border:1px solid var(--border);color:var(--text);background:var(--surface)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-3px);box-shadow:0 10px 34px rgba(0,240,255,.2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:760px}
+.stat{
+  border:1px solid var(--border);border-radius:18px;padding:22px 18px;
+  background:var(--surface);backdrop-filter:blur(8px);text-align:center;
+  transition:all .35s;position:relative;overflow:hidden;
+}
+.stat:hover{transform:translateY(-5px);border-color:rgba(0,240,255,.45);box-shadow:0 12px 36px rgba(0,240,255,.12)}
+.stat b{
+  display:block;font-family:var(--mono);font-size:1.9rem;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.stat span{font-size:.78rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.scroll-hint{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.3em;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.scroll-hint::after{
+  content:'';width:1px;height:46px;background:linear-gradient(180deg,var(--cyan),transparent);
+  animation:scrolldrop 1.8s ease-in-out infinite;
+}
+@keyframes scrolldrop{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- About ---------- */
+.about-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:60px;align-items:start}
+.about-text p{color:var(--muted);font-size:1.05rem;margin-bottom:26px}
+.about-text p strong{color:var(--text)}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{
+  font-family:var(--mono);font-size:.74rem;padding:9px 16px;border-radius:99px;
+  border:1px solid var(--border);color:var(--muted);background:var(--surface);transition:all .3s;
+}
+.chip:hover{border-color:var(--violet);color:var(--text);box-shadow:0 0 18px rgba(139,92,246,.25);transform:translateY(-2px)}
+.id-card{
+  position:relative;border-radius:24px;padding:2px;
+  background:linear-gradient(135deg,rgba(0,240,255,.5),rgba(139,92,246,.4),rgba(255,45,146,.4));
+  animation:borderglow 5s ease-in-out infinite;
+}
+@keyframes borderglow{0%,100%{filter:saturate(1)}50%{filter:saturate(1.7) brightness(1.15)}}
+.id-card-inner{background:var(--bg2);border-radius:22px;padding:38px 32px;text-align:center}
+.avatar{
+  width:96px;height:96px;border-radius:50%;margin:0 auto 20px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-weight:700;font-size:1.7rem;color:#000;
+  background:var(--grad);box-shadow:0 0 38px rgba(0,240,255,.35);
+}
+.id-card-inner h3{font-size:1.3rem;margin-bottom:4px}
+.id-role{font-family:var(--mono);font-size:.8rem;color:var(--cyan);margin-bottom:18px}
+.id-meta{font-size:.86rem;color:var(--muted);line-height:2}
+.id-meta b{color:var(--text);font-weight:600}
+.id-links{display:flex;justify-content:center;gap:14px;margin-top:22px}
+.id-links a{
+  width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);color:var(--muted);transition:all .3s;text-decoration:none;
+}
+.id-links a:hover{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 18px rgba(0,240,255,.3);transform:translateY(-3px)}
+.id-links svg{width:18px;height:18px;fill:currentColor}
+
+/* ---------- Timeline ---------- */
+.timeline{position:relative;padding-left:38px}
+.timeline::before{
+  content:'';position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet),var(--magenta));
+  box-shadow:0 0 12px rgba(0,240,255,.4);
+}
+.t-item{position:relative;margin-bottom:54px}
+.t-item::before{
+  content:'';position:absolute;left:-37px;top:8px;width:16px;height:16px;border-radius:50%;
+  background:var(--bg);border:3px solid var(--cyan);box-shadow:0 0 16px rgba(0,240,255,.6);
+}
+.t-item:nth-child(2)::before{border-color:var(--violet);box-shadow:0 0 16px rgba(139,92,246,.6)}
+.t-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:6px}
+.t-head h3{font-size:1.35rem}
+.t-date{font-family:var(--mono);font-size:.76rem;color:var(--magenta);border:1px solid rgba(255,45,146,.3);border-radius:99px;padding:4px 14px;background:rgba(255,45,146,.06)}
+.t-org{color:var(--cyan);font-family:var(--mono);font-size:.85rem;margin-bottom:20px}
+.t-card{
+  border:1px solid var(--border);border-radius:18px;padding:26px;margin-bottom:16px;
+  background:var(--surface);backdrop-filter:blur(8px);transition:all .35s;
+}
+.t-card:hover{border-color:rgba(139,92,246,.5);transform:translateX(8px);box-shadow:-8px 8px 38px rgba(139,92,246,.12)}
+.t-card h4{font-size:1.05rem;margin-bottom:12px;color:var(--text)}
+.t-card ul{list-style:none}
+.t-card li{
+  color:var(--muted);font-size:.92rem;padding-left:22px;position:relative;margin-bottom:9px;
+}
+.t-card li::before{content:'▹';position:absolute;left:0;color:var(--cyan)}
+
+/* ---------- Projects ---------- */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px}
+.proj{
+  position:relative;border:1px solid var(--border);border-radius:22px;padding:32px 28px;
+  background:var(--surface);backdrop-filter:blur(8px);overflow:hidden;
+  transition:border-color .35s,box-shadow .35s;transform-style:preserve-3d;will-change:transform;
+}
+.proj::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s;pointer-events:none;
+  background:radial-gradient(550px circle at var(--mx,50%) var(--my,50%),rgba(0,240,255,.1),transparent 45%);
+}
+.proj:hover::before{opacity:1}
+.proj:hover{border-color:rgba(0,240,255,.4);box-shadow:0 22px 60px rgba(0,0,0,.5),0 0 0 1px rgba(0,240,255,.15)}
+.proj-num{
+  font-family:var(--mono);font-size:3rem;font-weight:700;line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);margin-bottom:18px;
+  transition:all .35s;
+}
+.proj:hover .proj-num{-webkit-text-stroke:1px var(--cyan);text-shadow:0 0 26px rgba(0,240,255,.4)}
+.proj h3{font-size:1.3rem;margin-bottom:12px}
+.proj p{color:var(--muted);font-size:.92rem;margin-bottom:22px;min-height:66px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tag{
+  font-family:var(--mono);font-size:.68rem;padding:5px 12px;border-radius:99px;
+  background:rgba(139,92,246,.12);color:#b9a4f5;border:1px solid rgba(139,92,246,.25);
+}
+.proj-link{
+  font-family:var(--mono);font-size:.82rem;color:var(--cyan);text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;transition:gap .3s;
+}
+.proj-link:hover{gap:14px;text-shadow:0 0 14px rgba(0,240,255,.6)}
+
+/* ---------- Skills ---------- */
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.skill-cat{
+  border:1px solid var(--border);border-radius:20px;padding:30px 26px;
+  background:var(--surface);backdrop-filter:blur(8px);transition:all .35s;position:relative;overflow:hidden;
+}
+.skill-cat::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .5s;
+}
+.skill-cat:hover::after{transform:scaleX(1)}
+.skill-cat:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.18);box-shadow:0 18px 48px rgba(0,0,0,.45)}
+.skill-cat h3{
+  font-size:1.05rem;margin-bottom:18px;display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);color:var(--cyan);
+}
+.skill-cat h3 .ico{font-size:1.2rem}
+.skill-tags{display:flex;flex-wrap:wrap;gap:9px}
+.skill-tags span{
+  font-size:.78rem;padding:7px 14px;border-radius:10px;color:var(--muted);
+  background:rgba(255,255,255,.04);border:1px solid var(--border);transition:all .25s;cursor:default;
+}
+.skill-tags span:hover{color:#000;background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 16px rgba(0,240,255,.45);transform:translateY(-2px)}
+
+/* ---------- Research ---------- */
+.pub{
+  position:relative;border-radius:24px;padding:2px;
+  background:linear-gradient(135deg,rgba(0,240,255,.45),rgba(139,92,246,.35),rgba(255,45,146,.35));
+}
+.pub-inner{background:var(--bg2);border-radius:22px;padding:44px 40px}
+.pub-meta{font-family:var(--mono);font-size:.78rem;color:var(--magenta);letter-spacing:.18em;text-transform:uppercase;margin-bottom:16px}
+.pub-inner h3{font-size:clamp(1.2rem,2.4vw,1.7rem);line-height:1.4;margin-bottom:14px}
+.pub-authors{color:var(--cyan);font-family:var(--mono);font-size:.84rem;margin-bottom:6px}
+.pub-chapter{color:var(--muted);font-size:.88rem;font-style:italic;margin-bottom:20px}
+.pub-inner p.abstract{color:var(--muted);font-size:.95rem;margin-bottom:24px}
+
+/* ---------- Achievements ---------- */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+.ach{
+  border:1px solid var(--border);border-radius:20px;padding:32px 26px;text-align:center;
+  background:var(--surface);backdrop-filter:blur(8px);transition:all .4s;position:relative;
+}
+.ach:hover{transform:translateY(-8px) scale(1.02);border-color:rgba(255,45,146,.45);box-shadow:0 20px 50px rgba(255,45,146,.12)}
+.ach .ico{
+  font-size:2.2rem;margin-bottom:16px;display:inline-block;
+  filter:drop-shadow(0 0 14px rgba(0,240,255,.5));
+  transition:transform .4s;
+}
+.ach:hover .ico{transform:scale(1.25) rotate(-8deg)}
+.ach h4{font-size:1.05rem;margin-bottom:10px;font-family:var(--mono);color:var(--cyan)}
+.ach p{color:var(--muted);font-size:.86rem}
+
+/* ---------- Contact ---------- */
+#contact{text-align:center;padding-bottom:140px}
+#contact .sec-tag{justify-content:center}
+#contact .sec-tag::before{content:'';height:1px;width:70px;background:linear-gradient(270deg,var(--cyan),transparent)}
+.contact-big{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:700;line-height:1.15;margin-bottom:22px}
+.contact-big em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+#contact>p{color:var(--muted);max-width:520px;margin:0 auto 44px;font-size:1.05rem}
+.contact-links{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-top:54px}
+.contact-links a{
+  font-family:var(--mono);font-size:.84rem;color:var(--muted);text-decoration:none;
+  border:1px solid var(--border);border-radius:14px;padding:14px 24px;
+  background:var(--surface);transition:all .3s;display:inline-flex;align-items:center;gap:10px;
+}
+.contact-links a:hover{color:var(--cyan);border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,240,255,.18)}
+
+/* ---------- Footer ---------- */
+footer{
+  position:relative;z-index:1;border-top:1px solid var(--border);
+  padding:36px 6vw;text-align:center;color:var(--muted);font-size:.84rem;
+  background:rgba(5,5,8,.6);backdrop-filter:blur(10px);
+}
+footer b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+footer .sub{font-family:var(--mono);font-size:.72rem;margin-top:8px;letter-spacing:.06em}
+
+/* ---------- Back to top ---------- */
+#toTop{
+  position:fixed;right:28px;bottom:28px;width:48px;height:48px;border-radius:14px;z-index:999;
+  background:var(--surface);border:1px solid var(--border);color:var(--cyan);font-size:1.2rem;
+  cursor:pointer;opacity:0;visibility:hidden;transition:all .4s;backdrop-filter:blur(10px);
+}
+#toTop.show{opacity:1;visibility:visible}
+#toTop:hover{border-color:var(--cyan);box-shadow:0 0 24px rgba(0,240,255,.4);transform:translateY(-4px)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .about-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:768px){
+  #hamburger{display:flex}
+  .nav-links{
+    position:fixed;inset:0;background:rgba(5,5,8,.96);backdrop-filter:blur(20px);
+    flex-direction:column;align-items:center;justify-content:center;gap:38px;
+    transform:translateX(100%);transition:transform .45s cubic-bezier(.16,1,.3,1);z-index:1001;
+  }
+  .nav-links.open{transform:none}
+  .nav-links a{font-size:1.3rem}
+  .nav-cta{display:none}
+  section{padding:80px 6vw}
+  .proj p{min-height:unset}
+}
+</style>
 </head>
 <body>
 
-    <!-- ═══ PARTICLE CANVAS (fixed, full-page) ═══ -->
-    <canvas id="particleCanvas"></canvas>
+<div id="loader">
+  <div class="loader-logo">&lt;F.A /&gt;</div>
+  <div class="loader-bar"><i id="loadFill"></i></div>
+  <div class="loader-pct" id="loadPct">0%</div>
+</div>
 
-    <!-- Scroll progress -->
-    <div class="progress" id="progress"></div>
+<div class="aurora"><span></span><span></span><span></span></div>
+<canvas id="particles"></canvas>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+<div id="scrollbar"></div>
 
-    <!-- Cursor dot (small, the canvas handles the glow) -->
-    <div class="cur-dot" id="curDot"></div>
+<nav id="nav">
+  <a href="#hero" class="logo">&lt;F.A /&gt;</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">./lets_talk</a>
+  <button id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
 
-    <!-- ═══ NAV ═══ -->
-    <nav class="nav" id="nav">
-        <div class="nav-pill">
-            <a href="#hero" class="logo">F<span>.</span>A</a>
-            <div class="nav-links" id="navLinks">
-                <a href="#about" class="nav-a">About</a>
-                <a href="#experience" class="nav-a">Experience</a>
-                <a href="#projects" class="nav-a">Projects</a>
-                <a href="#skills" class="nav-a">Skills</a>
-                <a href="#contact" class="nav-a">Contact</a>
-            </div>
-            <a href="#contact" class="nav-cta">Let's Talk</a>
-            <button class="burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+<main>
+<!-- HERO -->
+<section id="hero">
+  <div class="badge"><i></i>OPEN TO OPPORTUNITIES</div>
+  <div class="glitch-wrap">
+    <h1 class="hero-name">Farrukh<br><span class="grad">Aftab Ahmed</span></h1>
+  </div>
+  <div class="typed-line"><span class="prompt">~$</span>&nbsp;<span id="typed"></span><span class="caret"></span></div>
+  <p class="hero-sub">Architecting mission-critical AI systems, city-scale surveillance platforms, and enterprise-grade distributed services. 8+ years turning complex challenges into production-ready solutions.</p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">Explore Work ↓</a>
+    <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><b data-count="8" data-suffix="+">0</b><span>Years Experience</span></div>
+    <div class="stat"><b data-count="15" data-suffix="+">0</b><span>Projects Delivered</span></div>
+    <div class="stat"><b data-count="1">0</b><span>Publication</span></div>
+    <div class="stat"><b data-count="2" data-suffix="nd">0</b><span>P@SHA Award</span></div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-tag">01 / About</div>
+  <h2 class="sec-title reveal">Engineering <em>Intelligence</em> at Scale</h2>
+  <div class="about-grid">
+    <div class="about-text reveal-left">
+      <p>I'm a <strong>Senior Software Designer and AI Systems Architect</strong> based in Islamabad, Pakistan, passionate about building intelligent systems that operate at scale.</p>
+      <p>My career spans designing <strong>Pakistan's first DRAP-approved AI electromedical device</strong>, architecting a <strong>city-scale video analytics platform</strong> for Islamabad Safe City, and building intelligent document processing engines for trade finance compliance.</p>
+      <p>I hold an <strong>MS in Computer Science</strong> with published research in deep learning for medical imaging, and bring hands-on expertise from PyTorch model ensembles to production FastAPI microservices orchestrated with Docker.</p>
+      <div class="chips">
+        <span class="chip">🏆 P@SHA ICT Awards 2021</span>
+        <span class="chip">📄 Elsevier Published</span>
+        <span class="chip">✅ DRAP &amp; PEC Approved</span>
+        <span class="chip">🏙 City-Scale AI Architect</span>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="id-card">
+        <div class="id-card-inner">
+          <div class="avatar">FA</div>
+          <h3>Farrukh Aftab Ahmed</h3>
+          <div class="id-role">Technical Lead &amp; AI Architect</div>
+          <div class="id-meta">
+            <b>RESOLVE Pvt. Ltd.</b><br>
+            Islamabad, Pakistan<br><br>
+            <b>MS Computer Science</b><br>HITEC University, 2023<br>
+            <b>BS Software Engineering</b><br>UET Taxila, 2016
+          </div>
+          <div class="id-links">
+            <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.14c0 .31.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a>
+            <a href="mailto:fury@outlook.com" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.24-8 5-8-5V6.5l8 5 8-5v1.74z"/></svg></a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V10.2H5.67v8.14h2.67zM7 8.99a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.35v-4.46c0-2.39-1.28-3.5-2.98-3.5-1.37 0-1.99.76-2.33 1.29v-1.1H10.4c.04.75 0 8.14 0 8.14h2.63v-4.55c0-.24.02-.49.09-.66.19-.48.63-.97 1.36-.97.96 0 1.34.73 1.34 1.81v4.37h2.52z"/></svg></a>
+          </div>
         </div>
-    </nav>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ HERO ═══ -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <div class="hero-badge anim-up" data-delay="0">
-                <span class="dot-pulse"></span> Open to Opportunities
-            </div>
-            <h1 class="hero-name">
-                <span class="name-line" data-split>Farrukh Aftab</span>
-                <span class="name-line name-line--glow" data-split>Ahmed</span>
-            </h1>
-            <div class="hero-role anim-up" data-delay="1">
-                <span id="typewriter"></span><span class="tw-cur">|</span>
-            </div>
-            <p class="hero-sub anim-up" data-delay="2">
-                Architecting mission-critical AI systems, city-scale surveillance
-                platforms, and enterprise-grade distributed services.<br>
-                8+ years turning complex challenges into production-ready solutions.
-            </p>
-            <div class="hero-btns anim-up" data-delay="3">
-                <a href="#projects" class="btn btn--glow"><span>Explore Work</span><i class="fas fa-arrow-down"></i></a>
-                <a href="#contact" class="btn btn--glass"><span>Get in Touch</span></a>
-            </div>
-        </div>
-        <div class="hero-metrics anim-up" data-delay="4">
-            <div class="metric"><span class="metric-val" data-count="8">0</span><span class="metric-suf">+</span><span class="metric-lbl">Years</span></div>
-            <div class="metric"><span class="metric-val" data-count="15">0</span><span class="metric-suf">+</span><span class="metric-lbl">Projects</span></div>
-            <div class="metric"><span class="metric-val" data-count="1">0</span><span class="metric-lbl">Publication</span></div>
-            <div class="metric"><span class="metric-val" data-count="2">0</span><span class="metric-suf">nd</span><span class="metric-lbl">P@SHA Award</span></div>
-        </div>
-        <div class="scroll-cue anim-up" data-delay="5">
-            <div class="scroll-line"></div><span>Scroll</span>
-        </div>
-    </section>
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sec-tag">02 / Experience</div>
+  <h2 class="sec-title reveal">Where I've Made <em>Impact</em></h2>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <div class="t-head"><h3>Technical Lead &amp; AI Architect</h3><span class="t-date">2023 — Present</span></div>
+      <div class="t-org">RESOLVE Pvt. Ltd.</div>
+      <div class="t-card">
+        <h4>🛰 Islamabad Safe City — AI Video Analytics</h4>
+        <ul>
+          <li>Spearheaded architecture of a city-scale AI platform ingesting hundreds of simultaneous CCTV streams with sub-second vehicle detection, real-time blacklist matching, and automated alert orchestration</li>
+          <li>Engineered scalable event-driven microservices achieving high availability and low-latency 24/7 operation</li>
+          <li>Directed cross-functional teams, establishing CI/CD workflows that reduced release cycle time significantly</li>
+        </ul>
+      </div>
+      <div class="t-card">
+        <h4>📑 AI-Powered LC Compliance Engine</h4>
+        <ul>
+          <li>Designed an intelligent engine parsing trade finance documents, extracting entities via OCR/NLP, and generating compliance reports against UCP 600</li>
+          <li>Delivered robust REST APIs enabling seamless third-party integration and real-time compliance reporting</li>
+        </ul>
+      </div>
+    </div>
+    <div class="t-item reveal">
+      <div class="t-head"><h3>Senior Software Designer / Engineer</h3><span class="t-date">2017 — 2023</span></div>
+      <div class="t-org">Public Sector Organization (Pakistan)</div>
+      <div class="t-card">
+        <h4>🫁 AI Electromedical Device — COVID-19 Detection</h4>
+        <ul>
+          <li>Pioneered Pakistan's first AI-based diagnostic device for COVID-19 detection using deep learning on chest X-rays — DRAP approved, PEC validated</li>
+          <li>Delivered full PACS system integration enabling seamless clinical workflow adoption</li>
+          <li>Awarded 2nd position at P@SHA ICT Awards 2021</li>
+        </ul>
+      </div>
+      <div class="t-card">
+        <h4>🔐 Secure Licensing &amp; Mission-Critical Systems</h4>
+        <ul>
+          <li>Architected cryptographic licensing for national-scale government deployments</li>
+          <li>Built real-time encrypted video streaming with lossless decryption pipelines</li>
+          <li>Designed 3D simulation frameworks for operational scenarios (NDA-restricted)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ ABOUT ═══ -->
-    <section class="sec" id="about">
-        <div class="wrap">
-            <div class="sec-label reveal">01 / About</div>
-            <div class="about-row">
-                <div class="about-left">
-                    <p class="about-text" id="aboutText">I'm a Senior Software Designer and AI Systems Architect based in Islamabad, Pakistan, passionate about building intelligent systems that operate at scale. My career spans designing Pakistan's first DRAP-approved AI electromedical device, architecting a city-scale video analytics platform for Islamabad Safe City, and building intelligent document processing engines for trade finance compliance. I hold an MS in Computer Science with published research in deep learning for medical imaging, and bring hands-on expertise from PyTorch model ensembles to production FastAPI microservices orchestrated with Docker.</p>
-                    <div class="badge-row">
-                        <div class="badge-item reveal"><i class="fas fa-award"></i> P@SHA ICT Awards 2021</div>
-                        <div class="badge-item reveal"><i class="fas fa-book-open"></i> Elsevier Published</div>
-                        <div class="badge-item reveal"><i class="fas fa-shield-halved"></i> DRAP & PEC Approved</div>
-                        <div class="badge-item reveal"><i class="fas fa-city"></i> City-Scale AI Architect</div>
-                    </div>
-                </div>
-                <div class="about-right reveal">
-                    <div class="id-card">
-                        <div class="id-glow"></div>
-                        <div class="id-avatar"><span>FA</span></div>
-                        <h3>Farrukh Aftab Ahmed</h3>
-                        <p class="id-role">Technical Lead & AI Architect</p>
-                        <p class="id-org">RESOLVE Pvt. Ltd.</p>
-                        <div class="id-loc"><i class="fas fa-map-marker-alt"></i> Islamabad, Pakistan</div>
-                        <div class="id-edu">
-                            <div><i class="fas fa-graduation-cap"></i><div><strong>MS Computer Science</strong><small>HITEC University, 2023</small></div></div>
-                            <div><i class="fas fa-graduation-cap"></i><div><strong>BS Software Engineering</strong><small>UET Taxila, 2016</small></div></div>
-                        </div>
-                        <div class="id-links">
-                            <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                            <a href="mailto:fury@outlook.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-tag">03 / Projects</div>
+  <h2 class="sec-title reveal">Open-Source <em>Work</em></h2>
+  <div class="proj-grid">
+    <div class="proj reveal">
+      <div class="proj-num">01</div>
+      <h3>VisionGuard</h3>
+      <p>Real-time video analytics for surveillance. Multi-stream CCTV ingestion, YOLO detection, multi-object tracking, event-driven alerts.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">YOLO</span><span class="tag">OpenCV</span><span class="tag">Redis</span><span class="tag">Docker</span></div>
+      <a class="proj-link" href="https://github.com/farrukh-aftab-ahmed/VisionGuard" target="_blank" rel="noopener">View Source →</a>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-num">02</div>
+      <h3>MedXpert-AI</h3>
+      <p>Medical image classification with ensemble deep learning, Grad-CAM explainability, DICOM/PACS integration for chest X-ray pathology.</p>
+      <div class="tags"><span class="tag">PyTorch</span><span class="tag">FastAPI</span><span class="tag">DICOM</span><span class="tag">Grad-CAM</span><span class="tag">Docker</span></div>
+      <a class="proj-link" href="https://github.com/farrukh-aftab-ahmed/MedXpert-AI" target="_blank" rel="noopener">View Source →</a>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-num">03</div>
+      <h3>DocIntel</h3>
+      <p>Intelligent document processing &amp; compliance engine. Multi-stage OCR, NLP entity extraction, UCP 600 trade finance validation.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Tesseract</span><span class="tag">spaCy</span><span class="tag">FastAPI</span><span class="tag">Docker</span></div>
+      <a class="proj-link" href="https://github.com/farrukh-aftab-ahmed/DocIntel" target="_blank" rel="noopener">View Source →</a>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-num">04</div>
+      <h3>CryptoLicenseKit</h3>
+      <p>Cryptographic licensing library — RSA/Ed25519 signing, hardware fingerprinting, usage quotas, offline validation, license server.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Cryptography</span><span class="tag">FastAPI</span><span class="tag">SQLite</span></div>
+      <a class="proj-link" href="https://github.com/farrukh-aftab-ahmed/CryptoLicenseKit" target="_blank" rel="noopener">View Source →</a>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-num">05</div>
+      <h3>StreamForge</h3>
+      <p>Event-driven microservices framework — circuit breaker, saga, retry patterns, Redis Streams, distributed tracing, service discovery.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">Redis</span><span class="tag">Docker</span><span class="tag">Async</span></div>
+      <a class="proj-link" href="https://github.com/farrukh-aftab-ahmed/StreamForge" target="_blank" rel="noopener">View Source →</a>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ EXPERIENCE ═══ -->
-    <section class="sec" id="experience">
-        <div class="wrap">
-            <div class="sec-label reveal">02 / Experience</div>
-            <h2 class="sec-title reveal">Where I've Made <em>Impact</em></h2>
-            <div class="timeline">
-                <div class="tl-rail"><div class="tl-fill" id="tlFill"></div></div>
-                <div class="tl-entry reveal">
-                    <div class="tl-dot"></div>
-                    <div class="tl-body">
-                        <div class="tl-top"><div><h3>Technical Lead & AI Architect</h3><p class="tl-co">RESOLVE Pvt. Ltd.</p></div><span class="tl-date">2023 — Present</span></div>
-                        <div class="tl-proj"><h4><i class="fas fa-video"></i> Islamabad Safe City — AI Video Analytics</h4><ul><li>Spearheaded architecture of a city-scale AI platform ingesting hundreds of simultaneous CCTV streams with sub-second vehicle detection, real-time blacklist matching, and automated alert orchestration</li><li>Engineered scalable event-driven microservices achieving high availability and low-latency 24/7 operation</li><li>Directed cross-functional teams, establishing CI/CD workflows that reduced release cycle time significantly</li></ul></div>
-                        <div class="tl-proj"><h4><i class="fas fa-file-invoice"></i> AI-Powered LC Compliance Engine</h4><ul><li>Designed an intelligent engine parsing trade finance documents, extracting entities via OCR/NLP, and generating compliance reports against UCP 600</li><li>Delivered robust REST APIs enabling seamless third-party integration and real-time compliance reporting</li></ul></div>
-                    </div>
-                </div>
-                <div class="tl-entry reveal">
-                    <div class="tl-dot"></div>
-                    <div class="tl-body">
-                        <div class="tl-top"><div><h3>Senior Software Designer / Engineer</h3><p class="tl-co">Public Sector Organization (Pakistan)</p></div><span class="tl-date">2017 — 2023</span></div>
-                        <div class="tl-proj"><h4><i class="fas fa-heartbeat"></i> AI Electromedical Device — COVID-19 Detection</h4><ul><li>Pioneered Pakistan's first AI-based diagnostic device for COVID-19 detection using deep learning on chest X-rays — DRAP approved, PEC validated</li><li>Delivered full PACS system integration enabling seamless clinical workflow adoption</li><li>Awarded 2nd position at P@SHA ICT Awards 2021</li></ul></div>
-                        <div class="tl-proj"><h4><i class="fas fa-lock"></i> Secure Licensing & Mission-Critical Systems</h4><ul><li>Architected cryptographic licensing for national-scale government deployments</li><li>Built real-time encrypted video streaming with lossless decryption pipelines</li><li>Designed 3D simulation frameworks for operational scenarios (NDA-restricted)</li></ul></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-tag">04 / Skills</div>
+  <h2 class="sec-title reveal">Technical <em>Arsenal</em></h2>
+  <div class="skill-grid">
+    <div class="skill-cat reveal">
+      <h3><span class="ico">🧠</span>AI / ML</h3>
+      <div class="skill-tags"><span>Deep Learning</span><span>Computer Vision</span><span>Medical Imaging</span><span>Ensembles</span><span>OpenCV</span><span>PyTorch</span><span>OCR/NLP</span><span>YOLO</span></div>
+    </div>
+    <div class="skill-cat reveal">
+      <h3><span class="ico">⚙️</span>Backend</h3>
+      <div class="skill-tags"><span>Python / FastAPI</span><span>C#</span><span>Java / Spring</span><span>PHP</span><span>REST APIs</span><span>Microservices</span><span>Event-Driven</span><span>PACS</span></div>
+    </div>
+    <div class="skill-cat reveal">
+      <h3><span class="ico">🎨</span>Frontend</h3>
+      <div class="skill-tags"><span>React.js</span><span>Vue.js</span><span>TypeScript</span><span>ES6+</span><span>HTML5/CSS3</span><span>UI/UX</span></div>
+    </div>
+    <div class="skill-cat reveal">
+      <h3><span class="ico">🔐</span>Security &amp; DevOps</h3>
+      <div class="skill-tags"><span>Cryptography</span><span>Licensing</span><span>Encrypted Streaming</span><span>Docker</span><span>CI/CD</span><span>Linux</span><span>Git</span></div>
+    </div>
+    <div class="skill-cat reveal">
+      <h3><span class="ico">💾</span>Data</h3>
+      <div class="skill-tags"><span>SQL</span><span>NoSQL</span><span>Redis</span><span>Data Modelling</span><span>Streaming</span></div>
+    </div>
+    <div class="skill-cat reveal">
+      <h3><span class="ico">👥</span>Leadership</h3>
+      <div class="skill-tags"><span>Tech Lead</span><span>Team Mgmt</span><span>Architecture</span><span>Code Review</span><span>Agile</span></div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ PROJECTS ═══ -->
-    <section class="sec" id="projects">
-        <div class="wrap">
-            <div class="sec-label reveal">03 / Projects</div>
-            <h2 class="sec-title reveal">Open-Source <em>Work</em></h2>
-            <div class="proj-grid">
-                <article class="proj-card reveal">
-                    <div class="proj-num">01</div>
-                    <div class="proj-icon"><i class="fas fa-video"></i></div>
-                    <h3>VisionGuard</h3>
-                    <p>Real-time video analytics for surveillance. Multi-stream CCTV ingestion, YOLO detection, multi-object tracking, event-driven alerts.</p>
-                    <div class="proj-tags"><span>Python</span><span>FastAPI</span><span>YOLO</span><span>OpenCV</span><span>Redis</span><span>Docker</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/VisionGuard" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">02</div>
-                    <div class="proj-icon"><i class="fas fa-brain"></i></div>
-                    <h3>MedXpert-AI</h3>
-                    <p>Medical image classification with ensemble deep learning, Grad-CAM explainability, DICOM/PACS integration for chest X-ray pathology.</p>
-                    <div class="proj-tags"><span>PyTorch</span><span>FastAPI</span><span>DICOM</span><span>Grad-CAM</span><span>Docker</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/MedXpert-AI" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">03</div>
-                    <div class="proj-icon"><i class="fas fa-file-alt"></i></div>
-                    <h3>DocIntel</h3>
-                    <p>Intelligent document processing & compliance engine. Multi-stage OCR, NLP entity extraction, UCP 600 trade finance validation.</p>
-                    <div class="proj-tags"><span>Python</span><span>Tesseract</span><span>spaCy</span><span>FastAPI</span><span>Docker</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/DocIntel" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">04</div>
-                    <div class="proj-icon"><i class="fas fa-key"></i></div>
-                    <h3>CryptoLicenseKit</h3>
-                    <p>Cryptographic licensing library — RSA/Ed25519 signing, hardware fingerprinting, usage quotas, offline validation, license server.</p>
-                    <div class="proj-tags"><span>Python</span><span>Cryptography</span><span>FastAPI</span><span>SQLite</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/CryptoLicenseKit" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">05</div>
-                    <div class="proj-icon"><i class="fas fa-bolt"></i></div>
-                    <h3>StreamForge</h3>
-                    <p>Event-driven microservices framework — circuit breaker, saga, retry patterns, Redis Streams, distributed tracing, service discovery.</p>
-                    <div class="proj-tags"><span>Python</span><span>FastAPI</span><span>Redis</span><span>Docker</span><span>Async</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/StreamForge" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-            </div>
-        </div>
-    </section>
+<!-- RESEARCH -->
+<section id="research">
+  <div class="sec-tag">05 / Research</div>
+  <h2 class="sec-title reveal">Published <em>Work</em></h2>
+  <div class="pub reveal">
+    <div class="pub-inner">
+      <div class="pub-meta">Elsevier — 2023</div>
+      <h3>A Cognitive Learning Approach for Severity Classification of Diabetic Retinopathy Using Voting-Based Selection of Deep Models</h3>
+      <div class="pub-authors">Farrukh Aftab Ahmed et al.</div>
+      <div class="pub-chapter">Chapter 12 — Cognitive and Meta Learning Strategies in Biomedical Research and Healthcare</div>
+      <p class="abstract">Proposed a novel voting-based ensemble approach for automated diabetic retinopathy severity grading using multiple deep learning architectures, leveraging cognitive learning strategies to select optimal model combinations.</p>
+      <div class="tags"><span class="tag">Deep Learning</span><span class="tag">Medical Imaging</span><span class="tag">Ensembles</span><span class="tag">Retinopathy</span></div>
+    </div>
+  </div>
+</section>
 
-    <!-- ═══ SKILLS ═══ -->
-    <section class="sec" id="skills">
-        <div class="wrap">
-            <div class="sec-label reveal">04 / Skills</div>
-            <h2 class="sec-title reveal">Technical <em>Arsenal</em></h2>
-            <div class="sk-grid">
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-brain"></i></div><h3>AI / ML</h3><div class="sk-list"><span>Deep Learning</span><span>Computer Vision</span><span>Medical Imaging</span><span>Ensembles</span><span>OpenCV</span><span>PyTorch</span><span>OCR/NLP</span><span>YOLO</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-server"></i></div><h3>Backend</h3><div class="sk-list"><span>Python / FastAPI</span><span>C#</span><span>Java / Spring</span><span>PHP</span><span>REST APIs</span><span>Microservices</span><span>Event-Driven</span><span>PACS</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-palette"></i></div><h3>Frontend</h3><div class="sk-list"><span>React.js</span><span>Vue.js</span><span>TypeScript</span><span>ES6+</span><span>HTML5/CSS3</span><span>UI/UX</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-shield-halved"></i></div><h3>Security</h3><div class="sk-list"><span>Cryptography</span><span>Licensing</span><span>Encrypted Streaming</span><span>Docker</span><span>CI/CD</span><span>Linux</span><span>Git</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-database"></i></div><h3>Data</h3><div class="sk-list"><span>SQL</span><span>NoSQL</span><span>Redis</span><span>Data Modelling</span><span>Streaming</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-users-gear"></i></div><h3>Leadership</h3><div class="sk-list"><span>Tech Lead</span><span>Team Mgmt</span><span>Architecture</span><span>Code Review</span><span>Agile</span></div></div>
-            </div>
-        </div>
-    </section>
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="sec-tag">06 / Achievements</div>
+  <h2 class="sec-title reveal">Recognition &amp; <em>Milestones</em></h2>
+  <div class="ach-grid">
+    <div class="ach reveal"><span class="ico">🏆</span><h4>P@SHA ICT 2021</h4><p>2nd Place — Pakistan's first AI electromedical device for COVID-19 detection.</p></div>
+    <div class="ach reveal"><span class="ico">✅</span><h4>DRAP &amp; PEC</h4><p>Full regulatory &amp; technical validation — rare for AI medical software in Pakistan.</p></div>
+    <div class="ach reveal"><span class="ico">🏙</span><h4>Safe City Architect</h4><p>City-scale video analytics platform processing hundreds of camera streams in real time.</p></div>
+    <div class="ach reveal"><span class="ico">🛡</span><h4>National Security</h4><p>Cryptographic licensing &amp; encrypted streaming across sensitive government infrastructure.</p></div>
+  </div>
+</section>
 
-    <!-- ═══ RESEARCH ═══ -->
-    <section class="sec" id="research">
-        <div class="wrap">
-            <div class="sec-label reveal">05 / Research</div>
-            <h2 class="sec-title reveal">Published <em>Work</em></h2>
-            <div class="pub reveal">
-                <div class="pub-tag">Elsevier — 2023</div>
-                <h3>A Cognitive Learning Approach for Severity Classification of Diabetic Retinopathy Using Voting-Based Selection of Deep Models</h3>
-                <p class="pub-auth">Farrukh Aftab Ahmed et al.</p>
-                <p class="pub-jrnl"><i class="fas fa-book"></i> Chapter 12 — Cognitive and Meta Learning Strategies in Biomedical Research and Healthcare</p>
-                <p class="pub-abs">Proposed a novel voting-based ensemble approach for automated diabetic retinopathy severity grading using multiple deep learning architectures, leveraging cognitive learning strategies to select optimal model combinations.</p>
-                <div class="pub-kw"><span>Deep Learning</span><span>Medical Imaging</span><span>Ensembles</span><span>Retinopathy</span></div>
-            </div>
-            <div class="sec-label reveal" style="margin-top:72px">06 / Achievements</div>
-            <div class="achv-row">
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-trophy"></i></div><h4>P@SHA ICT 2021</h4><p>2nd Place — Pakistan's first AI electromedical device for COVID-19 detection.</p></div>
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-certificate"></i></div><h4>DRAP & PEC</h4><p>Full regulatory & technical validation — rare for AI medical software in Pakistan.</p></div>
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-city"></i></div><h4>Safe City Architect</h4><p>City-scale video analytics platform processing hundreds of camera streams in real time.</p></div>
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-shield-halved"></i></div><h4>National Security</h4><p>Cryptographic licensing & encrypted streaming across sensitive government infrastructure.</p></div>
-            </div>
-        </div>
-    </section>
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-tag">07 / Contact</div>
+  <h2 class="contact-big reveal">Let's build something<br><em>great together</em></h2>
+  <p class="reveal">Open to discussing new projects, architecture challenges, or impactful opportunities.</p>
+  <a href="mailto:fury@outlook.com" class="btn btn-primary reveal">Get in Touch ✉</a>
+  <div class="contact-links reveal">
+    <a href="mailto:fury@outlook.com">✉ fury@outlook.com</a>
+    <a href="tel:+923345221297">📞 +92-334-5221297</a>
+    <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener">⌥ GitHub</a>
+    <a href="#">📍 Islamabad, PK</a>
+  </div>
+</section>
+</main>
 
-    <!-- ═══ CONTACT ═══ -->
-    <section class="sec sec--cta" id="contact">
-        <div class="wrap cta-wrap">
-            <div class="sec-label reveal">07 / Contact</div>
-            <h2 class="cta-title" id="ctaTitle" data-split>Let's build something great</h2>
-            <p class="cta-sub reveal">Open to discussing new projects, architecture challenges, or impactful opportunities.</p>
-            <a href="mailto:fury@outlook.com" class="cta-btn" id="ctaBtn"><span>Get in Touch</span></a>
-            <div class="cta-links reveal">
-                <a href="mailto:fury@outlook.com"><i class="fas fa-envelope"></i> fury@outlook.com</a>
-                <a href="tel:+923345221297"><i class="fas fa-phone"></i> +92-334-5221297</a>
-                <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-                <span><i class="fas fa-map-marker-alt"></i> Islamabad, PK</span>
-            </div>
-        </div>
-    </section>
+<footer>
+  Designed &amp; Built by <b>Farrukh Aftab Ahmed</b>
+  <div class="sub">Senior Software Designer · Technical Lead · AI Systems Architect</div>
+</footer>
 
-    <footer class="footer">
-        <div class="wrap"><p>Designed & Built by <strong>Farrukh Aftab Ahmed</strong></p><p class="footer-sm">Senior Software Designer · Technical Lead · AI Systems Architect</p></div>
-    </footer>
+<button id="toTop" aria-label="Back to top">↑</button>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-    <script src="script.js"></script>
+<script>
+/* ================= Loader ================= */
+(function(){
+  const fill=document.getElementById('loadFill'),pct=document.getElementById('loadPct');
+  let p=0;
+  const t=setInterval(()=>{
+    p=Math.min(100,p+Math.random()*22);
+    fill.style.width=p+'%';pct.textContent=Math.floor(p)+'%';
+    if(p>=100){clearInterval(t);setTimeout(()=>document.getElementById('loader').classList.add('done'),300);}
+  },120);
+})();
+
+/* ================= Particle network ================= */
+(function(){
+  const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+  let W,H,particles=[],mouse={x:null,y:null,r:160};
+  const COLORS=['rgba(0,240,255,','rgba(139,92,246,','rgba(255,45,146,'];
+  function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;init();}
+  function init(){
+    const n=Math.min(120,Math.floor(W*H/13000));
+    particles=Array.from({length:n},()=>({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,
+      r:Math.random()*1.8+.6,c:COLORS[Math.random()*COLORS.length|0],
+      a:Math.random()*.5+.25
+    }));
+  }
+  addEventListener('resize',resize);
+  addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+  addEventListener('mouseleave',()=>{mouse.x=null;mouse.y=null;});
+  function step(){
+    ctx.clearRect(0,0,W,H);
+    for(const p of particles){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      if(mouse.x!==null){
+        const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);
+        if(d<mouse.r&&d>0){const f=(mouse.r-d)/mouse.r*.6;p.x+=dx/d*f;p.y+=dy/d*f;}
+      }
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);
+      ctx.fillStyle=p.c+p.a+')';ctx.fill();
+    }
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const a=particles[i],b=particles[j];
+        const dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;
+        if(d<13000){
+          const o=(1-d/13000)*.35;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle='rgba(0,240,255,'+o+')';ctx.lineWidth=.6;ctx.stroke();
+        }
+      }
+      if(mouse.x!==null){
+        const a=particles[i];
+        const dx=a.x-mouse.x,dy=a.y-mouse.y,d=dx*dx+dy*dy;
+        if(d<32000){
+          const o=(1-d/32000)*.5;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mouse.x,mouse.y);
+          ctx.strokeStyle='rgba(255,45,146,'+o+')';ctx.lineWidth=.7;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  resize();step();
+})();
+
+/* ================= Custom cursor ================= */
+(function(){
+  const dot=document.querySelector('.cursor-dot'),ring=document.querySelector('.cursor-ring');
+  let rx=0,ry=0,tx=0,ty=0;
+  addEventListener('mousemove',e=>{
+    tx=e.clientX;ty=e.clientY;
+    dot.style.left=tx+'px';dot.style.top=ty+'px';
+  });
+  (function follow(){
+    rx+=(tx-rx)*.16;ry+=(ty-ry)*.16;
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(follow);
+  })();
+  document.querySelectorAll('a,button,.proj,.stat,.chip,.skill-tags span').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+  });
+})();
+
+/* ================= Typewriter ================= */
+(function(){
+  const roles=['AI Systems Architect','Technical Lead','Computer Vision Engineer','Backend & Microservices Expert','Published Researcher'];
+  const el=document.getElementById('typed');
+  let ri=0,ci=0,del=false;
+  (function type(){
+    const word=roles[ri];
+    el.textContent=word.slice(0,ci);
+    if(!del){
+      if(ci<word.length){ci++;setTimeout(type,65);}
+      else{del=true;setTimeout(type,1800);}
+    }else{
+      if(ci>0){ci--;setTimeout(type,32);}
+      else{del=false;ri=(ri+1)%roles.length;setTimeout(type,350);}
+    }
+  })();
+})();
+
+/* ================= Scroll: nav, progress, toTop, active link ================= */
+(function(){
+  const nav=document.getElementById('nav'),bar=document.getElementById('scrollbar'),toTop=document.getElementById('toTop');
+  const sections=[...document.querySelectorAll('section[id]')];
+  const links=[...document.querySelectorAll('.nav-links a')];
+  addEventListener('scroll',()=>{
+    const y=scrollY,h=document.body.scrollHeight-innerHeight;
+    nav.classList.toggle('scrolled',y>40);
+    bar.style.width=(y/h*100)+'%';
+    toTop.classList.toggle('show',y>700);
+    let cur='';
+    for(const s of sections){if(y>=s.offsetTop-220)cur=s.id;}
+    links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+  },{passive:true});
+  toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+})();
+
+/* ================= Mobile menu ================= */
+(function(){
+  const burger=document.getElementById('hamburger'),menu=document.getElementById('navLinks');
+  burger.addEventListener('click',()=>{
+    burger.classList.toggle('open');menu.classList.toggle('open');
+  });
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    burger.classList.remove('open');menu.classList.remove('open');
+  }));
+})();
+
+/* ================= Reveal on scroll ================= */
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        e.target.style.transitionDelay=(e.target.dataset.delay||(i%4)*0.08)+'s';
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>io.observe(el));
+})();
+
+/* ================= Counters ================= */
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target,target=+el.dataset.count,suf=el.dataset.suffix||'';
+      const dur=1600,t0=performance.now();
+      (function tick(t){
+        const k=Math.min(1,(t-t0)/dur),ease=1-Math.pow(1-k,3);
+        el.textContent=Math.floor(target*ease)+suf;
+        if(k<1)requestAnimationFrame(tick);else el.textContent=target+suf;
+      })(t0);
+      io.unobserve(el);
+    });
+  },{threshold:.6});
+  document.querySelectorAll('.stat b').forEach(el=>io.observe(el));
+})();
+
+/* ================= 3D tilt + glow on project cards ================= */
+document.querySelectorAll('.proj').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=e.clientX-r.left,y=e.clientY-r.top;
+    card.style.setProperty('--mx',x+'px');
+    card.style.setProperty('--my',y+'px');
+    const rx=((y/r.height)-.5)*-8,ry=((x/r.width)-.5)*8;
+    card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='';});
+});
+</script>
 </body>
 </html>
