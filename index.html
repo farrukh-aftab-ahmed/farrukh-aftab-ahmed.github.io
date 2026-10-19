@@ -4,251 +4,214 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farrukh Aftab Ahmed — AI Systems Architect</title>
-    <meta name="description" content="AI Systems Architect & Technical Lead. 8+ years building mission-critical AI systems, city-scale surveillance platforms, and enterprise backends.">
-    <meta name="theme-color" content="#050508">
+    <meta name="description" content="Farrukh Aftab Ahmed — AI Systems Architect & Technical Lead in Islamabad. City-scale video analytics, medical AI and mission-critical distributed systems.">
+    <meta name="theme-color" content="#f7f5f2">
+    <script>document.documentElement.classList.add('js')</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=6.0">
 </head>
 <body>
+    <a class="skip" href="#about">Skip to content</a>
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
 
-    <!-- ═══ PARTICLE CANVAS (fixed, full-page) ═══ -->
-    <canvas id="particleCanvas"></canvas>
+    <header class="nav" id="nav">
+        <a href="#top" class="brand">Farrukh Aftab Ahmed</a>
+        <nav class="nav-links" aria-label="Primary">
+            <a href="#about">About</a>
+            <a href="#work">Work</a>
+            <a href="#experience">Experience</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+    </header>
+    <div class="menu" id="menu">
+        <nav aria-label="Mobile">
+            <a href="#about">About</a><a href="#work">Work</a><a href="#experience">Experience</a><a href="#opensource">Open source</a><a href="#contact">Contact</a>
+        </nav>
+    </div>
 
-    <!-- Scroll progress -->
-    <div class="progress" id="progress"></div>
-
-    <!-- Cursor dot (small, the canvas handles the glow) -->
-    <div class="cur-dot" id="curDot"></div>
-
-    <!-- ═══ NAV ═══ -->
-    <nav class="nav" id="nav">
-        <div class="nav-pill">
-            <a href="#hero" class="logo">F<span>.</span>A</a>
-            <div class="nav-links" id="navLinks">
-                <a href="#about" class="nav-a">About</a>
-                <a href="#experience" class="nav-a">Experience</a>
-                <a href="#projects" class="nav-a">Projects</a>
-                <a href="#skills" class="nav-a">Skills</a>
-                <a href="#contact" class="nav-a">Contact</a>
+    <main>
+        <!-- ═══ HERO — a portrait that reacts to you ═══ -->
+        <section class="hero" id="top">
+            <div class="hero-text">
+                <h1 class="name"><span class="n1">Farrukh</span><span class="n2">Aftab Ahmed</span></h1>
+                <p class="role">AI Systems Architect · Technical Lead</p>
+                <p class="hero-meta"><span class="live"></span>Islamabad, Pakistan · open to opportunities</p>
             </div>
-            <a href="#contact" class="nav-cta">Let's Talk</a>
-            <button class="burger" id="burger" aria-label="Menu"><span></span><span></span></button>
-        </div>
-    </nav>
 
-    <!-- ═══ HERO ═══ -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <div class="hero-badge anim-up" data-delay="0">
-                <span class="dot-pulse"></span> Open to Opportunities
-            </div>
-            <h1 class="hero-name">
-                <span class="name-line" data-split>Farrukh Aftab</span>
-                <span class="name-line name-line--glow" data-split>Ahmed</span>
-            </h1>
-            <div class="hero-role anim-up" data-delay="1">
-                <span id="typewriter"></span><span class="tw-cur">|</span>
-            </div>
-            <p class="hero-sub anim-up" data-delay="2">
-                Architecting mission-critical AI systems, city-scale surveillance
-                platforms, and enterprise-grade distributed services.<br>
-                8+ years turning complex challenges into production-ready solutions.
-            </p>
-            <div class="hero-btns anim-up" data-delay="3">
-                <a href="#projects" class="btn btn--glow"><span>Explore Work</span><i class="fas fa-arrow-down"></i></a>
-                <a href="#contact" class="btn btn--glass"><span>Get in Touch</span></a>
-            </div>
-        </div>
-        <div class="hero-metrics anim-up" data-delay="4">
-            <div class="metric"><span class="metric-val" data-count="8">0</span><span class="metric-suf">+</span><span class="metric-lbl">Years</span></div>
-            <div class="metric"><span class="metric-val" data-count="15">0</span><span class="metric-suf">+</span><span class="metric-lbl">Projects</span></div>
-            <div class="metric"><span class="metric-val" data-count="1">0</span><span class="metric-lbl">Publication</span></div>
-            <div class="metric"><span class="metric-val" data-count="2">0</span><span class="metric-suf">nd</span><span class="metric-lbl">P@SHA Award</span></div>
-        </div>
-        <div class="scroll-cue anim-up" data-delay="5">
-            <div class="scroll-line"></div><span>Scroll</span>
-        </div>
-    </section>
-
-    <!-- ═══ ABOUT ═══ -->
-    <section class="sec" id="about">
-        <div class="wrap">
-            <div class="sec-label reveal">01 / About</div>
-            <div class="about-row">
-                <div class="about-left">
-                    <p class="about-text" id="aboutText">I'm a Senior Software Designer and AI Systems Architect based in Islamabad, Pakistan, passionate about building intelligent systems that operate at scale. My career spans designing Pakistan's first DRAP-approved AI electromedical device, architecting a city-scale video analytics platform for Islamabad Safe City, and building intelligent document processing engines for trade finance compliance. I hold an MS in Computer Science with published research in deep learning for medical imaging, and bring hands-on expertise from PyTorch model ensembles to production FastAPI microservices orchestrated with Docker.</p>
-                    <div class="badge-row">
-                        <div class="badge-item reveal"><i class="fas fa-award"></i> P@SHA ICT Awards 2021</div>
-                        <div class="badge-item reveal"><i class="fas fa-book-open"></i> Elsevier Published</div>
-                        <div class="badge-item reveal"><i class="fas fa-shield-halved"></i> DRAP & PEC Approved</div>
-                        <div class="badge-item reveal"><i class="fas fa-city"></i> City-Scale AI Architect</div>
-                    </div>
+            <div class="stage" id="stage">
+                <div class="halo" aria-hidden="true"></div>
+                <div class="portrait" id="portrait">
+                    <canvas id="faceCanvas" role="img" aria-label="3D avatar of Farrukh Aftab Ahmed at a laptop, turning to look toward your cursor"></canvas>
+                    <img id="poseC" class="pose on" src="avatar.webp?v=2" alt="" width="688" height="960">
                 </div>
-                <div class="about-right reveal">
-                    <div class="id-card">
-                        <div class="id-glow"></div>
-                        <div class="id-avatar"><span>FA</span></div>
-                        <h3>Farrukh Aftab Ahmed</h3>
-                        <p class="id-role">Technical Lead & AI Architect</p>
-                        <p class="id-org">RESOLVE Pvt. Ltd.</p>
-                        <div class="id-loc"><i class="fas fa-map-marker-alt"></i> Islamabad, Pakistan</div>
-                        <div class="id-edu">
-                            <div><i class="fas fa-graduation-cap"></i><div><strong>MS Computer Science</strong><small>HITEC University, 2023</small></div></div>
-                            <div><i class="fas fa-graduation-cap"></i><div><strong>BS Software Engineering</strong><small>UET Taxila, 2016</small></div></div>
+                <div class="bubble" id="bubble" role="status" aria-live="polite"></div>
+                <a href="#about" class="explore" id="explore">Explore portfolio <i class="fas fa-arrow-down"></i></a>
+            </div>
+
+        </section>
+
+        <!-- ═══ ABOUT ═══ -->
+        <section class="section about" id="about">
+            <div class="wrap about-wrap">
+                <aside class="about-side">
+                    <p class="eyebrow" data-reveal>About</p>
+                    <div class="profile" data-reveal>
+                        <div class="profile-top">
+                            <div class="profile-pic"><img src="me.webp?v=2" alt="Avatar of Farrukh Aftab Ahmed" width="300" height="300" loading="lazy"><span class="status-dot" aria-hidden="true"></span></div>
+                            <div>
+                                <p class="profile-name">Farrukh Aftab Ahmed</p>
+                                <p class="profile-role">AI Systems Architect · Technical Lead</p>
+                            </div>
                         </div>
-                        <div class="id-links">
-                            <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                            <a href="mailto:fury@outlook.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <ul class="profile-facts">
+                            <li><i class="fas fa-location-dot" aria-hidden="true"></i>Islamabad, Pakistan</li>
+                            <li><i class="fas fa-graduation-cap" aria-hidden="true"></i>MS Computer Science</li>
+                            <li><i class="fas fa-briefcase" aria-hidden="true"></i>8+ years shipping production AI</li>
+                            <li class="open"><i class="fas fa-circle-check" aria-hidden="true"></i>Open to opportunities</li>
+                        </ul>
+                        <div class="profile-links">
+                            <a href="mailto:fury@outlook.com" class="icon-btn" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                            <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="#contact" class="profile-cta">Get in touch <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══ EXPERIENCE ═══ -->
-    <section class="sec" id="experience">
-        <div class="wrap">
-            <div class="sec-label reveal">02 / Experience</div>
-            <h2 class="sec-title reveal">Where I've Made <em>Impact</em></h2>
-            <div class="timeline">
-                <div class="tl-rail"><div class="tl-fill" id="tlFill"></div></div>
-                <div class="tl-entry reveal">
-                    <div class="tl-dot"></div>
-                    <div class="tl-body">
-                        <div class="tl-top"><div><h3>Technical Lead & AI Architect</h3><p class="tl-co">RESOLVE Pvt. Ltd.</p></div><span class="tl-date">2023 — Present</span></div>
-                        <div class="tl-proj"><h4><i class="fas fa-video"></i> Islamabad Safe City — AI Video Analytics</h4><ul><li>Spearheaded architecture of a city-scale AI platform ingesting hundreds of simultaneous CCTV streams with sub-second vehicle detection, real-time blacklist matching, and automated alert orchestration</li><li>Engineered scalable event-driven microservices achieving high availability and low-latency 24/7 operation</li><li>Directed cross-functional teams, establishing CI/CD workflows that reduced release cycle time significantly</li></ul></div>
-                        <div class="tl-proj"><h4><i class="fas fa-file-invoice"></i> AI-Powered LC Compliance Engine</h4><ul><li>Designed an intelligent engine parsing trade finance documents, extracting entities via OCR/NLP, and generating compliance reports against UCP 600</li><li>Delivered robust REST APIs enabling seamless third-party integration and real-time compliance reporting</li></ul></div>
-                    </div>
-                </div>
-                <div class="tl-entry reveal">
-                    <div class="tl-dot"></div>
-                    <div class="tl-body">
-                        <div class="tl-top"><div><h3>Senior Software Designer / Engineer</h3><p class="tl-co">Public Sector Organization (Pakistan)</p></div><span class="tl-date">2017 — 2023</span></div>
-                        <div class="tl-proj"><h4><i class="fas fa-heartbeat"></i> AI Electromedical Device — COVID-19 Detection</h4><ul><li>Pioneered Pakistan's first AI-based diagnostic device for COVID-19 detection using deep learning on chest X-rays — DRAP approved, PEC validated</li><li>Delivered full PACS system integration enabling seamless clinical workflow adoption</li><li>Awarded 2nd position at P@SHA ICT Awards 2021</li></ul></div>
-                        <div class="tl-proj"><h4><i class="fas fa-lock"></i> Secure Licensing & Mission-Critical Systems</h4><ul><li>Architected cryptographic licensing for national-scale government deployments</li><li>Built real-time encrypted video streaming with lossless decryption pipelines</li><li>Designed 3D simulation frameworks for operational scenarios (NDA-restricted)</li></ul></div>
+                </aside>
+                <div class="about-main">
+                    <p class="statement" id="statement">I build AI systems that <span class="hl">have to work</span> — a city-scale vision platform for <em>Islamabad Safe City</em>, Pakistan's first <em>DRAP-approved</em> AI medical device, and secure infrastructure for national deployments.</p>
+                    <p class="about-p" data-reveal>Senior Software Designer and AI Systems Architect with 8+ years of experience, an MS in Computer Science and published research in deep learning for medical imaging. Hands-on from PyTorch model ensembles to FastAPI microservices orchestrated with Docker.</p>
+                    <div class="toolkit" data-reveal>
+                        <p class="toolkit-label">Toolkit</p>
+                        <ul class="chips">
+                            <li>PyTorch</li><li>Computer Vision</li><li>YOLO</li><li>FastAPI</li><li>Docker</li><li>Microservices</li><li>Redis Streams</li><li>CI/CD</li><li>DICOM / PACS</li><li>OCR &amp; NLP</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- ═══ PROJECTS ═══ -->
-    <section class="sec" id="projects">
-        <div class="wrap">
-            <div class="sec-label reveal">03 / Projects</div>
-            <h2 class="sec-title reveal">Open-Source <em>Work</em></h2>
-            <div class="proj-grid">
-                <article class="proj-card reveal">
-                    <div class="proj-num">01</div>
-                    <div class="proj-icon"><i class="fas fa-video"></i></div>
-                    <h3>VisionGuard</h3>
-                    <p>Real-time video analytics for surveillance. Multi-stream CCTV ingestion, YOLO detection, multi-object tracking, event-driven alerts.</p>
-                    <div class="proj-tags"><span>Python</span><span>FastAPI</span><span>YOLO</span><span>OpenCV</span><span>Redis</span><span>Docker</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/VisionGuard" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">02</div>
-                    <div class="proj-icon"><i class="fas fa-brain"></i></div>
-                    <h3>MedXpert-AI</h3>
-                    <p>Medical image classification with ensemble deep learning, Grad-CAM explainability, DICOM/PACS integration for chest X-ray pathology.</p>
-                    <div class="proj-tags"><span>PyTorch</span><span>FastAPI</span><span>DICOM</span><span>Grad-CAM</span><span>Docker</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/MedXpert-AI" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">03</div>
-                    <div class="proj-icon"><i class="fas fa-file-alt"></i></div>
-                    <h3>DocIntel</h3>
-                    <p>Intelligent document processing & compliance engine. Multi-stage OCR, NLP entity extraction, UCP 600 trade finance validation.</p>
-                    <div class="proj-tags"><span>Python</span><span>Tesseract</span><span>spaCy</span><span>FastAPI</span><span>Docker</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/DocIntel" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">04</div>
-                    <div class="proj-icon"><i class="fas fa-key"></i></div>
-                    <h3>CryptoLicenseKit</h3>
-                    <p>Cryptographic licensing library — RSA/Ed25519 signing, hardware fingerprinting, usage quotas, offline validation, license server.</p>
-                    <div class="proj-tags"><span>Python</span><span>Cryptography</span><span>FastAPI</span><span>SQLite</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/CryptoLicenseKit" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
-                <article class="proj-card reveal">
-                    <div class="proj-num">05</div>
-                    <div class="proj-icon"><i class="fas fa-bolt"></i></div>
-                    <h3>StreamForge</h3>
-                    <p>Event-driven microservices framework — circuit breaker, saga, retry patterns, Redis Streams, distributed tracing, service discovery.</p>
-                    <div class="proj-tags"><span>Python</span><span>FastAPI</span><span>Redis</span><span>Docker</span><span>Async</span></div>
-                    <a href="https://github.com/farrukh-aftab-ahmed/StreamForge" target="_blank" rel="noopener" class="proj-link"><i class="fab fa-github"></i> Source <i class="fas fa-arrow-right"></i></a>
-                </article>
+            <div class="wrap">
+                <dl class="stats" data-stagger>
+                    <div><dt><span data-count="8">8</span><sup>+</sup></dt><dd>Years in production</dd></div>
+                    <div><dt><span data-count="15">15</span><sup>+</sup></dt><dd>Projects delivered</dd></div>
+                    <div><dt><span data-count="2">2</span><sup>nd</sup></dt><dd>P@SHA ICT Awards 2021</dd></div>
+                    <div><dt><span data-count="1">1</span></dt><dd>Elsevier publication</dd></div>
+                </dl>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ═══ SKILLS ═══ -->
-    <section class="sec" id="skills">
-        <div class="wrap">
-            <div class="sec-label reveal">04 / Skills</div>
-            <h2 class="sec-title reveal">Technical <em>Arsenal</em></h2>
-            <div class="sk-grid">
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-brain"></i></div><h3>AI / ML</h3><div class="sk-list"><span>Deep Learning</span><span>Computer Vision</span><span>Medical Imaging</span><span>Ensembles</span><span>OpenCV</span><span>PyTorch</span><span>OCR/NLP</span><span>YOLO</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-server"></i></div><h3>Backend</h3><div class="sk-list"><span>Python / FastAPI</span><span>C#</span><span>Java / Spring</span><span>PHP</span><span>REST APIs</span><span>Microservices</span><span>Event-Driven</span><span>PACS</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-palette"></i></div><h3>Frontend</h3><div class="sk-list"><span>React.js</span><span>Vue.js</span><span>TypeScript</span><span>ES6+</span><span>HTML5/CSS3</span><span>UI/UX</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-shield-halved"></i></div><h3>Security</h3><div class="sk-list"><span>Cryptography</span><span>Licensing</span><span>Encrypted Streaming</span><span>Docker</span><span>CI/CD</span><span>Linux</span><span>Git</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-database"></i></div><h3>Data</h3><div class="sk-list"><span>SQL</span><span>NoSQL</span><span>Redis</span><span>Data Modelling</span><span>Streaming</span></div></div>
-                <div class="sk-card reveal"><div class="sk-ico"><i class="fas fa-users-gear"></i></div><h3>Leadership</h3><div class="sk-list"><span>Tech Lead</span><span>Team Mgmt</span><span>Architecture</span><span>Code Review</span><span>Agile</span></div></div>
+        <!-- ═══ WORK ═══ -->
+        <section class="section work" id="work">
+            <div class="wrap">
+                <p class="eyebrow" data-reveal>Selected work</p>
+                <h2 class="h2" data-reveal>Systems for cities, clinics <em>&amp;</em> critical infrastructure.</h2>
+                <div class="cards" data-stagger>
+                    <article class="card">
+                        <span class="card-ico"><i class="fas fa-video"></i></span>
+                        <p class="card-meta">RESOLVE · 2023 — Present</p>
+                        <h3>Islamabad Safe City</h3>
+                        <p>A city-scale AI platform ingesting hundreds of simultaneous CCTV streams — sub-second vehicle detection, real-time blacklist matching and automated alert orchestration.</p>
+                        <ul class="tags"><li>Computer Vision</li><li>Microservices</li><li>CI/CD</li></ul>
+                    </article>
+                    <article class="card">
+                        <span class="card-ico"><i class="fas fa-heart-pulse"></i></span>
+                        <p class="card-meta">Public Sector · 2017 — 2023</p>
+                        <h3>AI Electromedical Device</h3>
+                        <p>Pakistan's first AI-based diagnostic device for COVID-19 detection on chest X-rays — DRAP approved, PEC validated and PACS-integrated. 2nd at P@SHA ICT Awards 2021.</p>
+                        <ul class="tags"><li>Deep Learning</li><li>PACS</li><li>DRAP</li></ul>
+                    </article>
+                    <article class="card">
+                        <span class="card-ico"><i class="fas fa-file-invoice"></i></span>
+                        <p class="card-meta">RESOLVE · 2023 — Present</p>
+                        <h3>LC Compliance Engine</h3>
+                        <p>Parses trade-finance documents, extracts entities via OCR and NLP, and generates compliance reports against UCP 600 through robust REST APIs.</p>
+                        <ul class="tags"><li>OCR</li><li>NLP</li><li>UCP 600</li></ul>
+                    </article>
+                    <article class="card">
+                        <span class="card-ico"><i class="fas fa-lock"></i></span>
+                        <p class="card-meta">Public Sector · 2017 — 2023</p>
+                        <h3>Secure Licensing &amp; Streaming</h3>
+                        <p>Cryptographic licensing for national-scale government deployments, encrypted real-time video streaming and 3D simulation frameworks (NDA-restricted).</p>
+                        <ul class="tags"><li>Cryptography</li><li>Encrypted streaming</li></ul>
+                    </article>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ═══ RESEARCH ═══ -->
-    <section class="sec" id="research">
-        <div class="wrap">
-            <div class="sec-label reveal">05 / Research</div>
-            <h2 class="sec-title reveal">Published <em>Work</em></h2>
-            <div class="pub reveal">
-                <div class="pub-tag">Elsevier — 2023</div>
-                <h3>A Cognitive Learning Approach for Severity Classification of Diabetic Retinopathy Using Voting-Based Selection of Deep Models</h3>
-                <p class="pub-auth">Farrukh Aftab Ahmed et al.</p>
-                <p class="pub-jrnl"><i class="fas fa-book"></i> Chapter 12 — Cognitive and Meta Learning Strategies in Biomedical Research and Healthcare</p>
-                <p class="pub-abs">Proposed a novel voting-based ensemble approach for automated diabetic retinopathy severity grading using multiple deep learning architectures, leveraging cognitive learning strategies to select optimal model combinations.</p>
-                <div class="pub-kw"><span>Deep Learning</span><span>Medical Imaging</span><span>Ensembles</span><span>Retinopathy</span></div>
+        <!-- ═══ EXPERIENCE ═══ -->
+        <section class="section" id="experience">
+            <div class="wrap">
+                <p class="eyebrow" data-reveal>Experience</p>
+                <h2 class="h2" data-reveal>Eight years of systems that <em>can't</em> afford to fail.</h2>
+                <ol class="timeline">
+                    <li class="tl" data-reveal>
+                        <span class="tl-when">2023 — Present</span>
+                        <div><h3>Technical Lead &amp; AI Architect</h3><p class="tl-org">RESOLVE Pvt. Ltd.</p>
+                        <p>Leading the architecture of the Islamabad Safe City video analytics platform and an AI-powered LC compliance engine; directing cross-functional teams and establishing CI/CD that significantly reduced release cycles.</p></div>
+                    </li>
+                    <li class="tl" data-reveal>
+                        <span class="tl-when">2017 — 2023</span>
+                        <div><h3>Senior Software Designer / Engineer</h3><p class="tl-org">Public Sector Organization</p>
+                        <p>Delivered Pakistan's first AI electromedical device with full PACS integration, cryptographic licensing for national-scale deployments, encrypted real-time video streaming and 3D simulation frameworks.</p></div>
+                    </li>
+                    <li class="tl" data-reveal>
+                        <span class="tl-when">Education</span>
+                        <div><h3>MS Computer Science · BS Software Engineering</h3><p class="tl-org">HITEC University (2023) · UET Taxila (2016)</p></div>
+                    </li>
+                </ol>
             </div>
-            <div class="sec-label reveal" style="margin-top:72px">06 / Achievements</div>
-            <div class="achv-row">
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-trophy"></i></div><h4>P@SHA ICT 2021</h4><p>2nd Place — Pakistan's first AI electromedical device for COVID-19 detection.</p></div>
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-certificate"></i></div><h4>DRAP & PEC</h4><p>Full regulatory & technical validation — rare for AI medical software in Pakistan.</p></div>
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-city"></i></div><h4>Safe City Architect</h4><p>City-scale video analytics platform processing hundreds of camera streams in real time.</p></div>
-                <div class="achv reveal"><div class="achv-ico"><i class="fas fa-shield-halved"></i></div><h4>National Security</h4><p>Cryptographic licensing & encrypted streaming across sensitive government infrastructure.</p></div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ═══ CONTACT ═══ -->
-    <section class="sec sec--cta" id="contact">
-        <div class="wrap cta-wrap">
-            <div class="sec-label reveal">07 / Contact</div>
-            <h2 class="cta-title" id="ctaTitle" data-split>Let's build something great</h2>
-            <p class="cta-sub reveal">Open to discussing new projects, architecture challenges, or impactful opportunities.</p>
-            <a href="mailto:fury@outlook.com" class="cta-btn" id="ctaBtn"><span>Get in Touch</span></a>
-            <div class="cta-links reveal">
-                <a href="mailto:fury@outlook.com"><i class="fas fa-envelope"></i> fury@outlook.com</a>
-                <a href="tel:+923345221297"><i class="fas fa-phone"></i> +92-334-5221297</a>
-                <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-                <span><i class="fas fa-map-marker-alt"></i> Islamabad, PK</span>
+        <!-- ═══ OPEN SOURCE ═══ -->
+        <section class="section" id="opensource">
+            <div class="wrap">
+                <p class="eyebrow" data-reveal>Open source</p>
+                <h2 class="h2" data-reveal>Field-tested patterns, <em>built in the open.</em></h2>
+                <ul class="repos" data-stagger>
+                    <li><a href="https://github.com/farrukh-aftab-ahmed/VisionGuard" target="_blank" rel="noopener"><span class="r-name">VisionGuard</span><span class="r-desc">Real-time video analytics — YOLO detection, tracking and event-driven alerts.</span><i class="fas fa-arrow-right"></i></a></li>
+                    <li><a href="https://github.com/farrukh-aftab-ahmed/MedXpert-AI" target="_blank" rel="noopener"><span class="r-name">MedXpert-AI</span><span class="r-desc">Ensemble deep learning for chest X-rays with Grad-CAM and DICOM/PACS.</span><i class="fas fa-arrow-right"></i></a></li>
+                    <li><a href="https://github.com/farrukh-aftab-ahmed/DocIntel" target="_blank" rel="noopener"><span class="r-name">DocIntel</span><span class="r-desc">Multi-stage OCR, NLP extraction and UCP 600 compliance validation.</span><i class="fas fa-arrow-right"></i></a></li>
+                    <li><a href="https://github.com/farrukh-aftab-ahmed/CryptoLicenseKit" target="_blank" rel="noopener"><span class="r-name">CryptoLicenseKit</span><span class="r-desc">RSA/Ed25519 licensing, hardware fingerprinting and offline validation.</span><i class="fas fa-arrow-right"></i></a></li>
+                    <li><a href="https://github.com/farrukh-aftab-ahmed/StreamForge" target="_blank" rel="noopener"><span class="r-name">StreamForge</span><span class="r-desc">Event-driven microservices — circuit breaker, saga, Redis Streams, tracing.</span><i class="fas fa-arrow-right"></i></a></li>
+                </ul>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="footer">
-        <div class="wrap"><p>Designed & Built by <strong>Farrukh Aftab Ahmed</strong></p><p class="footer-sm">Senior Software Designer · Technical Lead · AI Systems Architect</p></div>
-    </footer>
+        <!-- ═══ RESEARCH ═══ -->
+        <section class="section" id="research">
+            <div class="wrap">
+                <p class="eyebrow" data-reveal>Research &amp; recognition</p>
+                <h3 class="pub" data-reveal>A Cognitive Learning Approach for Severity Classification of Diabetic Retinopathy Using Voting-Based Selection of Deep Models</h3>
+                <p class="pub-src" data-reveal>Elsevier, 2023 · Chapter 12 in <em>Cognitive and Meta Learning Strategies in Biomedical Research and Healthcare</em></p>
+                <ul class="awards" data-stagger>
+                    <li><b>P@SHA ICT 2021</b>2nd place — AI electromedical device</li>
+                    <li><b>DRAP &amp; PEC</b>Regulatory and technical validation</li>
+                    <li><b>Safe City</b>City-scale AI architect</li>
+                    <li><b>National security</b>Cryptographic systems</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ═══ CONTACT ═══ -->
+        <section class="section contact" id="contact">
+            <div class="wrap">
+                <p class="eyebrow" data-reveal>Contact</p>
+                <h2 class="contact-title" data-reveal>Let's build something <em>clear.</em></h2>
+                <p class="contact-lead" data-reveal>Open to new projects, architecture challenges and leadership roles. The fastest way to reach me is email.</p>
+                <div class="contact-btns" data-reveal>
+                    <a href="mailto:fury@outlook.com" class="btn btn-solid"><i class="fas fa-envelope"></i>fury@outlook.com</a>
+                    <a href="tel:+923345221297" class="btn btn-line"><i class="fas fa-phone"></i>+92 334 5221297</a>
+                    <a href="https://github.com/farrukh-aftab-ahmed" target="_blank" rel="noopener" class="btn btn-line"><i class="fab fa-github"></i>GitHub</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot"><span>© <span id="year">2026</span> Farrukh Aftab Ahmed</span><a href="#top">Back to top ↑</a></footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-    <script src="script.js"></script>
+    <script src="app.js?v=6.0"></script>
 </body>
 </html>
