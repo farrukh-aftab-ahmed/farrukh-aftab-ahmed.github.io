@@ -18,7 +18,7 @@
   const AV = { size: [688, 960], cell: [312, 435], at: [189, 49], neck: [345, 470] };
 
   /* ---------- behaviour ---------- */
-  const st = { tx: 0, ty: 0, side: 'center', frame: MID, target: MID, pitch: 0, lean: 0, last: 0 };
+  const st = { tx: 0, ty: 0, near: false, side: 'center', frame: MID, target: MID, pitch: 0, lean: 0, last: 0 };
   let lastMove = 0, centerSince = 0, heroVisible = true, zone = '', zoneSide = '';
   const LINES = {
     start: FINE ? 'move your cursor — I’ll follow it' : 'watch me look around',
@@ -41,8 +41,12 @@
   function aimAt(x, y) {
     const r = canvas.getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = r.top + r.height * 0.3;
-    st.tx = clamp((x - cx) / (innerWidth * 0.4), -1, 1);
-    st.ty = clamp((y - cy) / (innerHeight * 0.5), -1, 1);
+    // each side spans from the character to its own screen edge, so the head keeps
+    // turning as the cursor sweeps across the whole page (not just near the character)
+    const dx = x - cx, dy = y - cy;
+    st.tx = clamp(dx / Math.max(80, (dx < 0 ? cx : innerWidth - cx) - 24), -1, 1);
+    st.ty = clamp(dy / Math.max(80, (dy < 0 ? cy : innerHeight - cy) - 24), -1, 1);
+    st.near = Math.abs(dx) < r.width * 0.22;          // cursor in front of the face
     lastMove = performance.now();
   }
   if (FINE) addEventListener('pointermove', e => { if (heroVisible) aimAt(e.clientX, e.clientY); }, { passive: true });
@@ -50,7 +54,7 @@
   new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(hero);
 
   function update(now) {
-    const dt = st.last ? Math.min((now - st.last) / 1000, 0.25) : 0.016;
+    const dt = st.last ? clamp((now - st.last) / 1000, 0, 0.25) : 0.016;
     st.last = now;
     const idleFor = now - lastMove;
     if (!FINE && idleFor > 2600) {
@@ -71,7 +75,7 @@
     else if (p === 'left' && st.tx > -0.3) st.side = 'center';
     else if (p === 'right' && st.tx < 0.3) st.side = 'center';
 
-    const inCenter = Math.abs(st.tx) < 0.16 && (lastMove || !FINE);
+    const inCenter = (FINE ? st.near && idleFor < 7000 : Math.abs(st.tx) < 0.16);
     if (inCenter) { if (!centerSince) centerSince = now; } else centerSince = 0;
     const greeting = !!centerSince && now - centerSince > 700;
 
@@ -83,15 +87,15 @@
     }
 
     // head angle: settle on the nearest render (hysteresis), sweeping through the ones between
-    const want = clamp(MID + st.tx * MID * 1.15, 0, FRAMES - 1);
-    if (Math.abs(want - st.target) > 0.62) st.target = Math.round(want);
-    st.frame += (st.target - st.frame) * approach(dt, 0.09);
+    const want = clamp(MID + st.tx * MID * 1.08, 0, FRAMES - 1);
+    if (Math.abs(want - st.target) > 0.56) st.target = Math.round(want);
+    st.frame += (st.target - st.frame) * approach(dt, 0.07);
     if (Math.abs(st.target - st.frame) < 0.004) st.frame = st.target;
 
     // a little nod when greeting, and a slight chin lift/drop toward the cursor
     const nod = greeting ? Math.sin(now / 230) * Math.max(0, 1 - (now - centerSince - 700) / 1100) : 0;
-    st.pitch += (clamp(st.ty, -1, 1) * 0.6 + nod - st.pitch) * approach(dt, 0.25);
-    st.lean += (st.tx - st.lean) * approach(dt, 0.35);
+    st.pitch += (clamp(st.ty, -1, 1) * 0.8 + nod - st.pitch) * approach(dt, 0.2);
+    st.lean += (st.tx - st.lean) * approach(dt, 0.3);
   }
 
   /* ---------- renderer ---------- */
@@ -122,8 +126,8 @@
       // neighbouring renders only blend for an instant mid-switch, so no double image lingers
       let m = clamp((f - i - 0.35) / 0.3, 0, 1);
       m = m * m * (3 - 2 * m);
-      const tilt = st.lean * -0.025 + st.pitch * 0.01;
-      const dy = st.pitch * 5;
+      const tilt = st.lean * -0.035 + st.pitch * 0.018;
+      const dy = st.pitch * 8;
       const key = i + '|' + m.toFixed(3) + '|' + tilt.toFixed(4) + '|' + dy.toFixed(2) + '|' + canvas.width;
       if (key !== last) {
         last = key;
@@ -149,7 +153,7 @@
       }
       if (!RM) {
         const b = Math.sin(now / 1150) * 0.005;
-        canvas.style.transform = 'perspective(1200px) rotateY(' + (st.lean * 3) + 'deg) translateY(' + (b * -50) + 'px) scale(' + (1 + b * 0.6) + ',' + (1 + b) + ')';
+        canvas.style.transform = 'perspective(1200px) translateX(' + (st.lean * 6) + 'px) rotateY(' + (st.lean * 5) + 'deg) translateY(' + (b * -50) + 'px) scale(' + (1 + b * 0.6) + ',' + (1 + b) + ')';
       }
     })(performance.now());
   }
