@@ -203,7 +203,7 @@ function startAvatar(canvas, body, sheet) {
 (async function startHero() {
     const load = src => new Promise((ok, bad) => { const im = new Image(); im.onload = () => ok(im); im.onerror = bad; im.src = src; });
     try {
-        const [body, sheet] = await Promise.all([load('body.webp?v=2'), load('heads.webp?v=2')]);
+        const [body, sheet] = await Promise.all([load('../body.webp?v=2'), load('../heads.webp?v=2')]);
         startAvatar($('#faceCanvas'), body, sheet);
     } catch (e) {
         // the still front-facing image stays; keep the bubble and greeting alive
